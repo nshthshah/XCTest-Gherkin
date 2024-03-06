@@ -34,7 +34,11 @@ let package = Package(
                 "Native/NativeScenario.swift",
                 "Native/NativeTestCase.swift",
                 "Native/ParseState.swift",
-                "Native/gherkin-languages.json"
+                "Native/gherkin-languages.json",
+                "XCTestExtension/XCTestScenario.swift",
+                "XCTestExtension/XCTestScenarioObserver.swift",
+                "XCTestExtension/XCTestStep.swift",
+                "XCTestExtension/XCTestStepLibrary.swift"
             ],
             sources: [
                 "Core/UnusedStepsTracker.h",
@@ -77,7 +81,11 @@ let package = Package(
                 "Native/NativeRunner.swift",
                 "Native/NativeScenario.swift",
                 "Native/NativeTestCase.swift",
-                "Native/ParseState.swift"
+                "Native/ParseState.swift",
+                "XCTestExtension/XCTestScenario.swift",
+                "XCTestExtension/XCTestScenarioObserver.swift",
+                "XCTestExtension/XCTestStep.swift",
+                "XCTestExtension/XCTestStepLibrary.swift"
             ],
             resources: [
                 .process("Native/gherkin-languages.json")

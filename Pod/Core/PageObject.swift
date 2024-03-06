@@ -21,6 +21,10 @@ open class PageObject: NSObject {
     /// This method should be overriden by subclasses
     /// and should return `true` if this PageObject's screen is presented
     open func isPresented() -> Bool { fatalError("not implemented") }
+    
+    /// This method should be overriden by subclasses
+    /// and should return `true` if this PageObject's screen is presented
+    open func app() -> XCUIApplication { fatalError("not implemented") }
 }
 
 /// This type defines common steps for all page objects.

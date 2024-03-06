@@ -58,8 +58,19 @@ class GherkinState: NSObject, XCTestObservation {
         super.init()
         XCTestObservationCenter.shared.addTestObserver(self)
     }
+    
+    func testCaseWillStart(_ testCase: XCTestCase) {
+        
+    }
+    func testCase(_ testCase: XCTestCase, didRecord issue: XCTIssue) {
+        
+    }
+    func testCase(_ testCase: XCTestCase, didRecord expectedFailure: XCTExpectedFailure) {
+        
+        let description = expectedFailure.failureReason ?? ""
+        let filePath = expectedFailure.issue.sourceCodeContext.location?.fileURL.absoluteString
+        let lineNumber = expectedFailure.issue.sourceCodeContext.location?.lineNumber
 
-    func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
         guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
         if filePath == file && lineNumber == line { return }
 
@@ -68,14 +79,17 @@ class GherkinState: NSObject, XCTestObservation {
                 test.attachScreenshot()
             }
         }
-        test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
+        
+        test.record(expectedFailure.issue)
         if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
-            test.recordFailure(withDescription: description, inFile: file, atLine: exampleLineNumber, expected: false)
+            test.record(expectedFailure.issue)
         }
+        GherkinScenarioObservationCenter.shared.triggernotification(forState: .testCaseDidFail(testCase, description))
     }
-
+    
     func testCaseDidFinish(_ testCase: XCTestCase) {
         testCase.scenarioContext = [:]
+        GherkinScenarioObservationCenter.shared.triggernotification(forState: .testCaseDidFinish(testCase))
     }
     
     func testSuiteDidFinish(_ testSuite: XCTestSuite) {
@@ -206,13 +220,6 @@ public extension XCTestCase {
     func And(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "And", file: file, line: line)
     }
-
-    /**
-     Run the step matching the specified expression
-     */
-    func But(_ expression: String, file: String = #file, line: Int = #line) {
-        self.performStep(expression, keyword: "But", file: file, line: line)
-    }
 }
 
 private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none
@@ -317,6 +324,7 @@ extension XCTestCase {
 
             if let testName = self.testName, testName != state.currentTestName {
                 print("  Scenario: \(testName.humanReadableString)")
+                GherkinScenarioObservationCenter.shared.triggernotification(forState: .testCaseWillStart(self))
                 state.currentTestName = testName
                 if state.currentExample == nil {
                     performBackground()
@@ -328,7 +336,7 @@ extension XCTestCase {
         let (matches, debugDescription) = step.matches(from: match, expression: expression)
 
         // Debug the step name
-        print("    step \(keyword) \(currentStepDepthString())\(debugDescription)  \(step.fullLocationDescription)")
+        // print("    step \(keyword) \(currentStepDepthString())\(debugDescription)  \(step.fullLocationDescription)")
 
         // Run the step
         XCTContext.runActivity(named: "\(keyword) \(debugDescription)  \(step.shortLocationDescription)") { (_) in
