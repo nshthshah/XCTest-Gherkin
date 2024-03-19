@@ -18,7 +18,8 @@ public extension XCTestCase {
         get { return XCTestCase._metadata ?? JsonType() }
         set(metadata) { XCTestCase._metadata = metadata }
     }
-    
+
+    @discardableResult
     func scenario(withMetadata metadata: JsonType = JsonType()) -> XCTestCase {
         self.metadata = metadata
         self.steps.removeAll()
@@ -26,7 +27,7 @@ public extension XCTestCase {
         self.state.currentStepLocation = nil
         return self
     }
-    
+
     func execute() {
         self.steps.forEach { step in
             GherkinScenarioObservationCenter.shared.triggernotification(forState: .testStepWillStart(step))
@@ -45,25 +46,29 @@ public extension XCTestCase {
             GherkinScenarioObservationCenter.shared.triggernotification(forState: .testStepDidFinish(step))
         }
     }
-    
+
+    @discardableResult
     func given(_ expression: String, file: String = #file, line: Int = #line) -> XCTestCase {
         let step = GherkinStep(expression, keyword: "Given", file: file, line: line)
         self.steps.append(step)
         return self
     }
-    
+
+    @discardableResult
     func when(_ expression: String, file: String = #file, line: Int = #line) -> XCTestCase {
         let step = GherkinStep(expression, keyword: "When", file: file, line: line)
         self.steps.append(step)
         return self
     }
-    
+
+    @discardableResult
     func then(_ expression: String, file: String = #file, line: Int = #line) -> XCTestCase {
         let step = GherkinStep(expression, keyword: "Then", file: file, line: line)
         self.steps.append(step)
         return self
     }
-    
+
+    @discardableResult
     func and(_ expression: String, file: String = #file, line: Int = #line) -> XCTestCase {
         let step = GherkinStep(expression, keyword: "And", file: file, line: line)
         self.steps.append(step)
