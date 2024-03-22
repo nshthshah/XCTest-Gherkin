@@ -29,8 +29,9 @@ public extension XCTestCase {
     }
 
     func execute() {
+        GherkinScenarioObservationCenter.shared.triggernotification(forState: .scenarioWillStart(self))
         self.steps.forEach { step in
-            GherkinScenarioObservationCenter.shared.triggernotification(forState: .testStepWillStart(step))
+            GherkinScenarioObservationCenter.shared.triggernotification(forState: .scenarioStepWillStart(step))
             switch step.keyword.lowercased() {
             case "given":
                 self.Given(step.expression, file: step.file, line: step.line)
@@ -43,8 +44,9 @@ public extension XCTestCase {
             default:
                 self.When(step.expression, file: step.file, line: step.line)
             }
-            GherkinScenarioObservationCenter.shared.triggernotification(forState: .testStepDidFinish(step))
+            GherkinScenarioObservationCenter.shared.triggernotification(forState: .scenarioStepDidFinish(step))
         }
+        GherkinScenarioObservationCenter.shared.triggernotification(forState: .scenarioDidFinish(self))
     }
 
     @discardableResult
@@ -90,13 +92,13 @@ public class GherkinScenarioObservationCenter {
 
 internal extension GherkinScenarioObservationCenter {
     enum State {
-        case testCaseWillStart(XCTestCase)
-        case testCaseDidFail(XCTestCase, String)
-        case testCaseDidFinish(XCTestCase)
+        case scenarioWillStart(XCTestCase)
+        case scenarioDidFail(XCTestCase, String)
+        case scenarioDidFinish(XCTestCase)
         
         /// Test Step
-        case testStepWillStart(GherkinStep)
-        case testStepDidFinish(GherkinStep)
+        case scenarioStepWillStart(GherkinStep)
+        case scenarioStepDidFinish(GherkinStep)
     }
 }
 
@@ -115,16 +117,16 @@ internal extension GherkinScenarioObservationCenter {
             }
 
             switch state {
-            case .testStepWillStart(let step):
-                observer.testStepWillStart(step)
-            case .testStepDidFinish(let step):
-                observer.testStepDidFinish(step)
-            case .testCaseWillStart(let testcase):
-                observer.testCaseWillStart(testcase)
-            case .testCaseDidFail(let testcase, let failureDescription):
-                observer.testCaseDidFail(testcase, didFailWithDescription: failureDescription)
-            case .testCaseDidFinish(let testcase):
-                observer.testCaseDidFinish(testcase)
+            case .scenarioStepWillStart(let step):
+                observer.scenarioStepWillStart(step)
+            case .scenarioStepDidFinish(let step):
+                observer.scenarioStepDidFinish(step)
+            case .scenarioWillStart(let testcase):
+                observer.scenarioWillStart(testcase)
+            case .scenarioDidFail(let testcase, let failureDescription):
+                observer.scenarioDidFail(testcase, didFailWithDescription: failureDescription)
+            case .scenarioDidFinish(let testcase):
+                observer.scenarioDidFinish(testcase)
             }
         }
     }
