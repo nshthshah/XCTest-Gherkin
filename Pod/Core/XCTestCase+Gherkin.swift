@@ -84,12 +84,11 @@ class GherkinState: NSObject, XCTestObservation {
         if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
             test.record(expectedFailure.issue)
         }
-        GherkinScenarioObservationCenter.shared.triggernotification(forState: .testCaseDidFail(testCase, description))
+        GherkinScenarioObservationCenter.shared.triggernotification(forState: .scenarioDidFail(testCase, description))
     }
     
     func testCaseDidFinish(_ testCase: XCTestCase) {
-        testCase.scenarioContext = [:]
-        GherkinScenarioObservationCenter.shared.triggernotification(forState: .testCaseDidFinish(testCase))
+        testCase.scenarioContext = [:]        
     }
     
     func testSuiteDidFinish(_ testSuite: XCTestSuite) {
@@ -323,8 +322,7 @@ extension XCTestCase {
             }
 
             if let testName = self.testName, testName != state.currentTestName {
-                print("  Scenario: \(testName.humanReadableString)")
-                GherkinScenarioObservationCenter.shared.triggernotification(forState: .testCaseWillStart(self))
+                print("  Scenario: \(testName.humanReadableString)")                
                 state.currentTestName = testName
                 if state.currentExample == nil {
                     performBackground()
