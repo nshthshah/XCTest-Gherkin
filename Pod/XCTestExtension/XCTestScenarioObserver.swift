@@ -4,44 +4,44 @@ import Foundation
 import XCTest
 
 extension Notification.Name {
-    static var testCaseWillStart: Notification.Name {
-        return .init(rawValue: "GherkinScenario.testCaseWillStart")
+    static var scenarioWillStart: Notification.Name {
+        return .init(rawValue: "GherkinScenario.scenarioWillStart")
     }
-    static var testCaseDidFail: Notification.Name {
-        return .init(rawValue: "GherkinScenario.testCaseDidFail")
+    static var scenarioDidFail: Notification.Name {
+        return .init(rawValue: "GherkinScenario.scenarioDidFail")
     }
-    static var testCaseDidFinish: Notification.Name {
-        return .init(rawValue: "GherkinScenario.testCaseDidFinish")
+    static var scenarioDidFinish: Notification.Name {
+        return .init(rawValue: "GherkinScenario.scenarioDidFinish")
     }
     
-    static var testStepWillStart: Notification.Name {
-        return .init(rawValue: "GherkinScenario.testStepWillStart")
+    static var scenarioStepWillStart: Notification.Name {
+        return .init(rawValue: "GherkinScenario.scenarioStepWillStart")
     }
-    static var testStepDidFinish: Notification.Name {
-        return .init(rawValue: "GherkinScenario.testStepDidFinish")
+    static var scenarioStepDidFinish: Notification.Name {
+        return .init(rawValue: "GherkinScenario.scenarioStepDidFinish")
     }
 }
 
 public protocol GherkinScenarioObserver: AnyObject {
 
     /// Test Case
-    func testCaseWillStart(_ testCase: XCTestCase)
-    func testCaseDidFail(_ testCase: XCTestCase, didFailWithDescription description: String)
-    func testCaseDidFinish(_ testCase: XCTestCase)
+    func scenarioWillStart(_ testCase: XCTestCase)
+    func scenarioDidFail(_ testCase: XCTestCase, didFailWithDescription description: String)
+    func scenarioDidFinish(_ testCase: XCTestCase)
     
     /// Test Step
-    func testStepWillStart(_ step: GherkinStep)
-    func testStepDidFinish(_ step: GherkinStep)
+    func scenarioStepWillStart(_ step: GherkinStep)
+    func scenarioStepDidFinish(_ step: GherkinStep)
 }
 
 extension GherkinScenarioObserver {
 
     /// Test Case
-    func testCaseWillStart(_ testCase: XCTestCase) { }
-    func testCaseDidFail(_ testCase: XCTestCase, didFailWithDescription description: String) { }
-    func testCaseDidFinish(_ testCase: XCTestCase) { }
+    func scenarioWillStart(_ testCase: XCTestCase) { }
+    func scenarioDidFail(_ testCase: XCTestCase, didFailWithDescription description: String) { }
+    func scenarioDidFinish(_ testCase: XCTestCase) { }
     
     /// Test Step
-    func testStepWillStart(_ step: GherkinStep) { }
-    func testStepDidFinish(_ step: GherkinStep) { }
+    func scenarioStepWillStart(_ step: GherkinStep) { }
+    func scenarioStepDidFinish(_ step: GherkinStep) { }
 }
