@@ -25,9 +25,6 @@ public extension XCTestCase {
         self.steps.removeAll()
         self.state.currentStepDepth = 0
         self.state.currentStepLocation = nil
-        self.state.currentTestName = "NO TESTS RUN YET"
-        self.state.currentSuiteName = "NO TESTS RUN YET"
-        self.state.currentStepName = "NO CURRENT STEP YET"
         return self
     }
 
