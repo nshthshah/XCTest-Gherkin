@@ -88,7 +88,8 @@ class GherkinState: NSObject, XCTestObservation {
     }
     
     func testCaseDidFinish(_ testCase: XCTestCase) {
-        testCase.scenarioContext = [:]        
+        testCase.scenarioContext = [:]
+        testCase.state.currentTestName = "NO TESTS RUN YET"
     }
     
     func testSuiteDidFinish(_ testSuite: XCTestSuite) {
